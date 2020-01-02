@@ -21,4 +21,18 @@
     <string name="day">1 day</string>
     <string name="prompt_salary">Daily salary</string>
     <string name="employees">Employees</string>
+
+    <string name="prompt_name">Name</string>
+    <string name="prompt_last_name">Last name</string>
+    <string name="prompt_cell_phone">Cellphone</string>
+    <string name="prompt_address">Address</string>
+    <string name="prompt_reference_name">Reference name</string>
+    <string name="prompt_reference_cellphone">Reference cellphone</string>
+    <string name="prompt_date">Date</string>
+    <string name="prompt_country">Country</string>
+    <string name="prompt_folio">Folio</string>
+    <string name="prompt_ssn">SSN (Social Security Number)</string>
+    <string name="prompt_uprc">UPRC (Unique Population Registry Code)</string>
+    <string name="prompt_ftr">FTR (Federal Taxpayer Register)</string>
+    <string name="action_add_employee">Add employee</string>
 </resources>
