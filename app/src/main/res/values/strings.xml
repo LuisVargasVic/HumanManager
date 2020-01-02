@@ -9,4 +9,16 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+
+    <string name="bonus">Bonus</string>
+    <string name="holiday_bonus">Holiday Bonus</string>
+    <string name="vacation">Vacation</string>
+    <string name="total">Total</string>
+    <string name="years">%d years</string>
+    <string name="one_year">1 year</string>
+    <string name="less_year">Less than a year</string>
+    <string name="days">%d days</string>
+    <string name="day">1 day</string>
+    <string name="prompt_salary">Daily salary</string>
+    <string name="employees">Employees</string>
 </resources>

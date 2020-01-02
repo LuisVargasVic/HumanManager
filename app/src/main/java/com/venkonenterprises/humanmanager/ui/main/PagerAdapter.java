@@ -8,6 +8,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.venkonenterprises.humanmanager.R;
+import com.venkonenterprises.humanmanager.ui.main.fragments.bonus.BonusFragment;
+import com.venkonenterprises.humanmanager.ui.main.fragments.users.UsersFragment;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
     
@@ -21,11 +23,11 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Fragment fragment = new Fragment();
-        /*if (position == 0) {
+        if (position == 0) {
             fragment = new UsersFragment();
         } else {
             fragment = new BonusFragment();
-        }*/
+        }
         return fragment;
     }
 
