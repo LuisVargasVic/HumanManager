@@ -1,4 +1,4 @@
-package com.venkonenterprises.humanmanager.ui.main;
+package com.venkonenterprises.humanmanager.presentation.main;
 
 import android.content.Context;
 
@@ -8,8 +8,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.venkonenterprises.humanmanager.R;
-import com.venkonenterprises.humanmanager.ui.main.fragments.bonus.BonusFragment;
-import com.venkonenterprises.humanmanager.ui.main.fragments.users.UsersFragment;
+import com.venkonenterprises.humanmanager.presentation.main.fragments.bonus.BonusFragment;
+import com.venkonenterprises.humanmanager.presentation.main.fragments.users.UsersFragment;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
     

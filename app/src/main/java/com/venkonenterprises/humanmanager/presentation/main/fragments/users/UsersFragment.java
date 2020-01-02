@@ -1,4 +1,4 @@
-package com.venkonenterprises.humanmanager.ui.main.fragments.users;
+package com.venkonenterprises.humanmanager.presentation.main.fragments.users;
 
 
 import android.os.Bundle;

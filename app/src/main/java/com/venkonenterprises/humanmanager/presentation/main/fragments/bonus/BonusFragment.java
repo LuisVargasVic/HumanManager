@@ -1,4 +1,4 @@
-package com.venkonenterprises.humanmanager.ui.main.fragments.bonus;
+package com.venkonenterprises.humanmanager.presentation.main.fragments.bonus;
 
 
 import android.os.Bundle;

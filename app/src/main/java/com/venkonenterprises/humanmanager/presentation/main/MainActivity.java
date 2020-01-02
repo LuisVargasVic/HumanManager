@@ -1,4 +1,4 @@
-package com.venkonenterprises.humanmanager.ui.main;
+package com.venkonenterprises.humanmanager.presentation.main;
 
 import android.content.Context;
 import android.os.Bundle;
