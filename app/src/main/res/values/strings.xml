@@ -4,15 +4,10 @@
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="login_failed">"Login failed"</string>
     <string name="email_empty">Enter email address!</string>
     <string name="email_invalid">Please add a valid email</string>
     <string name="password_empty">Password is empty!</string>
     <string name="password_invalid">Password must be at least 6 characters</string>
-    <string name="password_weak">Password is weak</string>
 
     <string name="employees_empty">No employees available or detected</string>
     <string name="employees_connection">Connect to internet to get employees</string>
@@ -21,10 +16,11 @@
     <string name="holiday_bonus">Holiday Bonus</string>
     <string name="vacation">Vacation</string>
     <string name="total">Total</string>
-    <string name="years">%d years</string>
+    <string name="time">%d %s</string>
+    <string name="years">years</string>
     <string name="one_year">1 year</string>
     <string name="less_year">Less than a year</string>
-    <string name="days">%d days</string>
+    <string name="days">days</string>
     <string name="day">1 day</string>
     <string name="prompt_salary">Daily salary</string>
     <string name="employees">Employees</string>
@@ -57,5 +53,6 @@
     <string name="uprc_required">Unique Population Registry Code is required</string>
     <string name="ftr_required">Federal Taxpayer Register is required</string>
     <string name="daily_salary_error">Please give a valid daily salary</string>
+    <string name="ok">OK</string>
 
 </resources>

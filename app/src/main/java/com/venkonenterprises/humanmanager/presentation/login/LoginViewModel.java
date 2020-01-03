@@ -12,7 +12,7 @@ import com.venkonenterprises.humanmanager.data.SessionRepository;
 
 public class LoginViewModel extends AndroidViewModel {
 
-    private SessionRepository repository;
+    private final SessionRepository repository;
 
     public LoginViewModel(@NonNull Application application) {
         super(application);

@@ -17,7 +17,7 @@ import java.util.List;
 public class MainViewModel extends AndroidViewModel {
 
     private static final String TAG = MainViewModel.class.getSimpleName();
-    private EmployeesRepository repository;
+    private final EmployeesRepository repository;
 
     public MainViewModel(@NonNull Application application) {
         super(application);

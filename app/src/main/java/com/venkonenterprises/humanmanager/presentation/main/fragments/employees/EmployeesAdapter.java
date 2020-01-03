@@ -17,7 +17,7 @@ import java.util.List;
 
 public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.ViewHolder> {
 
-    private Context mContext;
+    private final Context mContext;
     private List<Employee> mEmployees;
 
     EmployeesAdapter(Context context) {
@@ -51,9 +51,9 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.View
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tvName;
-        TextView tvLastName;
-        TextView tvCellphone;
+        final TextView tvName;
+        final TextView tvLastName;
+        final TextView tvCellphone;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);

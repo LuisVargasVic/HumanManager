@@ -2,6 +2,7 @@ package com.venkonenterprises.humanmanager.presentation.main;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -11,15 +12,16 @@ import com.venkonenterprises.humanmanager.R;
 import com.venkonenterprises.humanmanager.presentation.main.fragments.bonus.BonusFragment;
 import com.venkonenterprises.humanmanager.presentation.main.fragments.employees.EmployeesFragment;
 
-public class PagerAdapter extends FragmentStatePagerAdapter {
+class PagerAdapter extends FragmentStatePagerAdapter {
     
-    private Context context;
+    private final Context context;
 
-     PagerAdapter(FragmentManager fm, Context context) {
-        super(fm);
+    PagerAdapter(@NonNull FragmentManager fm, Context context) {
+        super(fm, FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.context = context;
     }
 
+    @NonNull
     @Override
     public Fragment getItem(int position) {
         Fragment fragment;

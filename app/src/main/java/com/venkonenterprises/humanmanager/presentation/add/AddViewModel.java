@@ -11,7 +11,7 @@ import com.venkonenterprises.humanmanager.remote.listeners.RemoteListener;
 
 public class AddViewModel extends AndroidViewModel {
 
-    private EmployeesRepository repository;
+    private final EmployeesRepository repository;
 
     public AddViewModel(@NonNull Application application) {
         super(application);

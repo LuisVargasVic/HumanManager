@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         viewModel.refresh( this);
         if (connection) snackbar = Snackbar.make(activityMainBinding.swipeRefreshLayout, getString(R.string.employees_empty), Snackbar.LENGTH_INDEFINITE);
         else snackbar = Snackbar.make(activityMainBinding.swipeRefreshLayout, getString(R.string.employees_connection), Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("Ok", new View.OnClickListener() {
+        snackbar.setAction(getString(R.string.ok), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 snackbar.dismiss();

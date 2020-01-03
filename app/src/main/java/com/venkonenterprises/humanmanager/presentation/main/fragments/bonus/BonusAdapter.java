@@ -1,5 +1,6 @@
 package com.venkonenterprises.humanmanager.presentation.main.fragments.bonus;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +22,7 @@ import java.util.Locale;
 
 public class BonusAdapter extends RecyclerView.Adapter<BonusAdapter.ViewHolder> {
 
-    private Context mContext;
+    private final Context mContext;
     private List<Employee> mEmployees;
 
     BonusAdapter(Context context) {
@@ -55,16 +56,16 @@ public class BonusAdapter extends RecyclerView.Adapter<BonusAdapter.ViewHolder> 
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        Context mContext;
-        TextView tvName;
-        TextView tvLastName;
-        TextView tvDate;
-        TextView tvWorkedDays;
-        TextView tvWorkedYears;
-        TextView tvBonus;
-        TextView tvVacation;
-        TextView tvHolidayBonus;
-        TextView tvTotal;
+        final Context mContext;
+        final TextView tvName;
+        final TextView tvLastName;
+        final TextView tvDate;
+        final TextView tvWorkedDays;
+        final TextView tvWorkedYears;
+        final TextView tvBonus;
+        final TextView tvVacation;
+        final TextView tvHolidayBonus;
+        final TextView tvTotal;
 
         ViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
@@ -80,6 +81,7 @@ public class BonusAdapter extends RecyclerView.Adapter<BonusAdapter.ViewHolder> 
             tvTotal = itemView.findViewById(R.id.tv_total);
         }
 
+        @SuppressLint("DefaultLocale")
         void bind(Employee employee) {
             tvName.setText(employee.getName());
             tvLastName.setText(employee.getLastName());
@@ -90,6 +92,7 @@ public class BonusAdapter extends RecyclerView.Adapter<BonusAdapter.ViewHolder> 
             try {
                 date = formatter.parse(employee.getDate());
                 Calendar calender = Calendar.getInstance();
+                assert date != null;
                 calender.setTime(date);
 
                 // Bonus
@@ -113,8 +116,8 @@ public class BonusAdapter extends RecyclerView.Adapter<BonusAdapter.ViewHolder> 
                 if (year < yearNow) {
                     vacationDays = 6;
                     int workedYears = yearNow - year;
-                    tvWorkedDays.setText(mContext.getString(R.string.days,  Double.valueOf(workedYears * numOfDays - dayAt + 1).intValue()));
-                    tvWorkedYears.setText(mContext.getString(R.string.years, workedYears));
+                    tvWorkedDays.setText(mContext.getString(R.string.time,  Double.valueOf(workedYears * numOfDays - dayAt + 1).intValue(), mContext.getString(R.string.days)));
+                    tvWorkedYears.setText(mContext.getString(R.string.time, workedYears, mContext.getString(R.string.years)));
 
                     if (workedYears < 5) {
                         vacationDays += workedYears * 2;
@@ -126,11 +129,11 @@ public class BonusAdapter extends RecyclerView.Adapter<BonusAdapter.ViewHolder> 
                     vacationDays = 6 / numOfDays * workedDays;
                     if (numOfDays == workedDays) {
                         tvWorkedYears.setText(mContext.getString(R.string.one_year));
-                        tvWorkedDays.setText(mContext.getString(R.string.days, Double.valueOf(numOfDays).intValue()));
+                        tvWorkedDays.setText(mContext.getString(R.string.time, Double.valueOf(numOfDays).intValue(), mContext.getString(R.string.days)));
                     } else {
                         tvWorkedYears.setText(mContext.getString(R.string.less_year));
                         if (numOfDays >= 1) {
-                            tvWorkedDays.setText(mContext.getString(R.string.days, Double.valueOf(workedDays).intValue()));
+                            tvWorkedDays.setText(mContext.getString(R.string.time, Double.valueOf(workedDays).intValue(), mContext.getString(R.string.days)));
                         } else {
                             tvWorkedDays.setText(mContext.getString(R.string.day));
                         }

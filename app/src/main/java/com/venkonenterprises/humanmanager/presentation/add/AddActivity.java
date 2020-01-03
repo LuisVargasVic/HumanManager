@@ -17,6 +17,8 @@ import com.venkonenterprises.humanmanager.presentation.BaseActivity;
 import com.venkonenterprises.humanmanager.remote.listeners.RemoteListener;
 import com.venkonenterprises.humanmanager.utils.DatePickerFragment;
 
+import java.util.Objects;
+
 public class AddActivity extends BaseActivity implements RemoteListener {
 
     private ActivityAddBinding activityAddBinding;
@@ -31,7 +33,7 @@ public class AddActivity extends BaseActivity implements RemoteListener {
         viewModel = ViewModelProviders.of(this).get(AddViewModel.class);
         final Activity activity = this;
 
-        activityAddBinding.dateLayout.getEditText().setTextIsSelectable(false);
+        Objects.requireNonNull(activityAddBinding.dateLayout.getEditText()).setTextIsSelectable(false);
         activityAddBinding.dateLayout.getEditText().setKeyListener(null);
         activityAddBinding.dateLayout.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -73,19 +75,19 @@ public class AddActivity extends BaseActivity implements RemoteListener {
                 activityAddBinding.uprcLayout.setError(null);
                 activityAddBinding.ftrLayout.setError(null);
 
-                String name = activityAddBinding.nameLayout.getEditText().getText().toString();
-                String lastName = activityAddBinding.lastNameLayout.getEditText().getText().toString();
-                String cellphone = activityAddBinding.cellphoneLayout.getEditText().getText().toString();
-                String address = activityAddBinding.addressLayout.getEditText().getText().toString();
-                String dailySalary = activityAddBinding.salaryLayout.getEditText().getText().toString();
-                String referenceName = activityAddBinding.referenceNameLayout.getEditText().getText().toString();
-                String referenceCellphone = activityAddBinding.referenceCellphoneLayout.getEditText().getText().toString();
+                String name = Objects.requireNonNull(activityAddBinding.nameLayout.getEditText()).getText().toString();
+                String lastName = Objects.requireNonNull(activityAddBinding.lastNameLayout.getEditText()).getText().toString();
+                String cellphone = Objects.requireNonNull(activityAddBinding.cellphoneLayout.getEditText()).getText().toString();
+                String address = Objects.requireNonNull(activityAddBinding.addressLayout.getEditText()).getText().toString();
+                String dailySalary = Objects.requireNonNull(activityAddBinding.salaryLayout.getEditText()).getText().toString();
+                String referenceName = Objects.requireNonNull(activityAddBinding.referenceNameLayout.getEditText()).getText().toString();
+                String referenceCellphone = Objects.requireNonNull(activityAddBinding.referenceCellphoneLayout.getEditText()).getText().toString();
                 String date = activityAddBinding.dateLayout.getEditText().getText().toString();
-                String country = activityAddBinding.countryLayout.getEditText().getText().toString();
-                String folio = activityAddBinding.folioLayout.getEditText().getText().toString();
-                String ssn = activityAddBinding.ssnLayout.getEditText().getText().toString();
-                String uprc = activityAddBinding.uprcLayout.getEditText().getText().toString();
-                String ftr = activityAddBinding.ftrLayout.getEditText().getText().toString();
+                String country = Objects.requireNonNull(activityAddBinding.countryLayout.getEditText()).getText().toString();
+                String folio = Objects.requireNonNull(activityAddBinding.folioLayout.getEditText()).getText().toString();
+                String ssn = Objects.requireNonNull(activityAddBinding.ssnLayout.getEditText()).getText().toString();
+                String uprc = Objects.requireNonNull(activityAddBinding.uprcLayout.getEditText()).getText().toString();
+                String ftr = Objects.requireNonNull(activityAddBinding.ftrLayout.getEditText()).getText().toString();
 
 
                 if (TextUtils.isEmpty(name)) {
@@ -136,7 +138,7 @@ public class AddActivity extends BaseActivity implements RemoteListener {
         return floatDailySalary;
     }
 
-    public static void hideSoftKeyboard(Activity activity) {
+    private static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         if (inputMethodManager != null && activity.getCurrentFocus() != null) {
             inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);

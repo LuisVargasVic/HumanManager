@@ -7,13 +7,13 @@ import com.venkonenterprises.humanmanager.database.DatabaseEmployee;
 import com.venkonenterprises.humanmanager.database.EmployeesDatabase;
 import com.venkonenterprises.humanmanager.remote.listeners.RemoteListener;
 
-public class TaskUpdateDatabase extends AsyncTask<Void, Void, Boolean> {
+class TaskUpdateDatabase extends AsyncTask<Void, Void, Boolean> {
 
-    private EmployeesDatabase mEmployeesDatabase;
-    private RemoteListener mRemoteListener;
-    private DatabaseEmployee mEmployee;
-    private DocumentChange.Type mType;
-    private boolean mLast;
+    private final EmployeesDatabase mEmployeesDatabase;
+    private final RemoteListener mRemoteListener;
+    private final DatabaseEmployee mEmployee;
+    private final DocumentChange.Type mType;
+    private final boolean mLast;
 
     TaskUpdateDatabase(EmployeesDatabase employeesDatabase, RemoteListener remoteListener, DatabaseEmployee employee, DocumentChange.Type type, boolean last) {
         mEmployeesDatabase = employeesDatabase;
@@ -40,7 +40,7 @@ public class TaskUpdateDatabase extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean result) {
         if (result) {
-            mRemoteListener.postExecute(result);
+            mRemoteListener.postExecute(true);
         }
     }
 }

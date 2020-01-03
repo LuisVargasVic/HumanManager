@@ -22,6 +22,7 @@ import com.venkonenterprises.humanmanager.databinding.ActivityLoginBinding;
 import com.venkonenterprises.humanmanager.presentation.BaseActivity;
 import com.venkonenterprises.humanmanager.presentation.main.MainActivity;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class LoginActivity extends BaseActivity implements OnCompleteListener<AuthResult> {
@@ -30,7 +31,6 @@ public class LoginActivity extends BaseActivity implements OnCompleteListener<Au
     private LoginViewModel viewModel;
     private ActivityLoginBinding activityLoginBinding;
     private AlertDialog progressDialog;
-    private FirebaseAuth mFirebaseAuth;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class LoginActivity extends BaseActivity implements OnCompleteListener<Au
         progressDialog = setUpProgressDialog();
         viewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
 
-        mFirebaseAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
         if (mFirebaseAuth.getCurrentUser() != null) {
             navigateToMainActivity();
         }
@@ -52,7 +52,7 @@ public class LoginActivity extends BaseActivity implements OnCompleteListener<Au
                 activityLoginBinding.usernameLayout.setError(null);
                 activityLoginBinding.passwordLayout.setError(null);
 
-                String username = activityLoginBinding.usernameLayout.getEditText().getText().toString().trim();
+                String username = Objects.requireNonNull(activityLoginBinding.usernameLayout.getEditText()).getText().toString().trim();
 
                 if (TextUtils.isEmpty(username)) {
                     activityLoginBinding.usernameLayout.setError(getString(R.string.email_empty));
@@ -66,7 +66,7 @@ public class LoginActivity extends BaseActivity implements OnCompleteListener<Au
                     return;
                 }
 
-                String password = activityLoginBinding.passwordLayout.getEditText().getText().toString().trim();
+                String password = Objects.requireNonNull(activityLoginBinding.passwordLayout.getEditText()).getText().toString().trim();
 
                 if (TextUtils.isEmpty(password)) {
                     activityLoginBinding.passwordLayout.setError(getString(R.string.password_empty));
@@ -87,7 +87,7 @@ public class LoginActivity extends BaseActivity implements OnCompleteListener<Au
     public void onComplete(@NonNull Task<AuthResult> task) {
         if (!task.isSuccessful()) {
             try {
-                throw task.getException();
+                throw Objects.requireNonNull(task.getException());
             }
             catch (FirebaseAuthWeakPasswordException weakPassword) {
                 Log.d(TAG, "onComplete: " + weakPassword.getMessage());
@@ -95,13 +95,13 @@ public class LoginActivity extends BaseActivity implements OnCompleteListener<Au
                 progressDialog.hide();
             }
             catch (FirebaseAuthUserCollisionException existEmail) {
-                String username = activityLoginBinding.usernameLayout.getEditText().getText().toString().trim();
-                String password = activityLoginBinding.passwordLayout.getEditText().getText().toString().trim();
+                String username = Objects.requireNonNull(activityLoginBinding.usernameLayout.getEditText()).getText().toString().trim();
+                String password = Objects.requireNonNull(activityLoginBinding.passwordLayout.getEditText()).getText().toString().trim();
                 viewModel.signInWithEmailAndPassword(this,this, username, password);
             }
             catch (Exception e) {
                 progressDialog.hide();
-                simpleAlertDialog(e.getMessage());
+                simpleAlertDialog(e.getMessage()).show();
             }
         } else {
             progressDialog.dismiss();
@@ -109,7 +109,7 @@ public class LoginActivity extends BaseActivity implements OnCompleteListener<Au
         }
     }
 
-    public void navigateToMainActivity() {
+    private void navigateToMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();

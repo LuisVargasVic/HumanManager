@@ -9,8 +9,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class TaskSession {
 
-    private OnCompleteListener<AuthResult> mOnCompleteListener;
-    private FirebaseAuth mFirebaseAuth;
+    private final OnCompleteListener<AuthResult> mOnCompleteListener;
+    private final FirebaseAuth mFirebaseAuth;
 
     public TaskSession(Context context, OnCompleteListener<AuthResult> onCompleteListener) {
         mOnCompleteListener = onCompleteListener;
