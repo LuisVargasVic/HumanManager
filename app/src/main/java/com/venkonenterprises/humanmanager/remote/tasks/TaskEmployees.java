@@ -1,9 +1,13 @@
 package com.venkonenterprises.humanmanager.remote.tasks;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -105,8 +109,7 @@ public class TaskEmployees {
                 });
     }
 
-    public void addEmployee(Employee employeeObject) {
-
+    public void addEmployee(Employee employeeObject, final RemoteListener remoteListener) {
         HashMap employee = new HashMap<String, Object>();
         employee.put(NAME_KEY, employeeObject.getName());
         employee.put(LAST_NAME_KEY, employeeObject.getLastName());
@@ -123,7 +126,17 @@ public class TaskEmployees {
         employee.put(DAILY_SALARY_KEY, employeeObject.getDailySalary());
 
         db.collection(USERS_KEY).document(userId).collection(EMPLOYEES_KEY)
-                .add(employee);
+                .add(employee)
+                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                        if (task.isSuccessful()) {
+                            remoteListener.postExecute(true);
+                        } else {
+                            remoteListener.postExecute(false);
+                        }
+                    }
+                });
     }
 
 }

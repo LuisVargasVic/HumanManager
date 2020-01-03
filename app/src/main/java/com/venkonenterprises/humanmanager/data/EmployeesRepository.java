@@ -61,7 +61,7 @@ public class EmployeesRepository {
                 });
     }
 
-    public void addEmployee(Employee employee) {
-        new TaskEmployees().addEmployee(employee);
+    public void addEmployee(Employee employee, RemoteListener remoteListener) {
+        new TaskEmployees().addEmployee(employee, remoteListener);
     }
 }
