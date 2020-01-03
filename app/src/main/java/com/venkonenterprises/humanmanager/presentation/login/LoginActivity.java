@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.venkonenterprises.humanmanager.R;
@@ -29,6 +30,7 @@ public class LoginActivity extends BaseActivity implements OnCompleteListener<Au
     private LoginViewModel viewModel;
     private ActivityLoginBinding activityLoginBinding;
     private AlertDialog progressDialog;
+    private FirebaseAuth mFirebaseAuth;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,12 @@ public class LoginActivity extends BaseActivity implements OnCompleteListener<Au
         progressDialog = setUpProgressDialog();
         viewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
 
-        findViewById(R.id.login).setOnClickListener(new View.OnClickListener() {
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        if (mFirebaseAuth.getCurrentUser() != null) {
+            navigateToMainActivity();
+        }
+
+        activityLoginBinding.login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -97,10 +104,14 @@ public class LoginActivity extends BaseActivity implements OnCompleteListener<Au
                 simpleAlertDialog(e.getMessage());
             }
         } else {
-            progressDialog.hide();
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            progressDialog.dismiss();
+            navigateToMainActivity();
         }
+    }
+
+    public void navigateToMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

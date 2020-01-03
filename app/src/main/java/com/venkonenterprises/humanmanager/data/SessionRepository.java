@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.AuthResult;
-import com.venkonenterprises.humanmanager.remote.TaskSession;
+import com.venkonenterprises.humanmanager.remote.tasks.TaskSession;
 
 public class SessionRepository {
 
