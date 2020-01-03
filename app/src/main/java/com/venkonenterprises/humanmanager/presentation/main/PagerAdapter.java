@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.venkonenterprises.humanmanager.R;
 import com.venkonenterprises.humanmanager.presentation.main.fragments.bonus.BonusFragment;
-import com.venkonenterprises.humanmanager.presentation.main.fragments.users.UsersFragment;
+import com.venkonenterprises.humanmanager.presentation.main.fragments.employees.EmployeesFragment;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
     
@@ -22,9 +22,9 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment = new Fragment();
+        Fragment fragment;
         if (position == 0) {
-            fragment = new UsersFragment();
+            fragment = new EmployeesFragment();
         } else {
             fragment = new BonusFragment();
         }

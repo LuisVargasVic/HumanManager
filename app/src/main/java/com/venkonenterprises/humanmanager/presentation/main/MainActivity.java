@@ -1,38 +1,102 @@
 package com.venkonenterprises.humanmanager.presentation.main;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.snackbar.Snackbar;
 import com.venkonenterprises.humanmanager.R;
+import com.venkonenterprises.humanmanager.databinding.ActivityMainBinding;
+import com.venkonenterprises.humanmanager.presentation.add.AddActivity;
+import com.venkonenterprises.humanmanager.remote.listeners.ConnectionListener;
+import com.venkonenterprises.humanmanager.remote.listeners.RemoteListener;
+import com.venkonenterprises.humanmanager.remote.receivers.MainReceiver;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, RemoteListener, ConnectionListener {
+
+    private ActivityMainBinding activityMainBinding;
+    public MainViewModel viewModel;
+    private BroadcastReceiver mReceiver;
+    private static ConnectionListener connectionListener;
+    public Snackbar snackbar;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Initialize connection receiver before making requests
+        mReceiver = new MainReceiver();
+        registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
+        connectionListener = this;
+
+        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        activityMainBinding.swipeRefreshLayout.setOnRefreshListener(this);
         final Context context = this;
 
-        ViewPager pager = findViewById(R.id.pager);
-        TabLayout tabs = findViewById(R.id.tabs);
+        activityMainBinding.pager.setAdapter(new PagerAdapter(getSupportFragmentManager(), this));
+        activityMainBinding.tabs.setupWithViewPager(activityMainBinding.pager);
 
-        pager.setAdapter(new PagerAdapter(getSupportFragmentManager(), this));
-        tabs.setupWithViewPager(pager);
-
-        FloatingActionButton floatingActionButton = findViewById(R.id.fab_add_users);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+        activityMainBinding.fabAddUsers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent intent = new Intent(context, AddActivity.class);
-                startActivity(intent);*/
+                Intent intent = new Intent(context, AddActivity.class);
+                startActivity(intent);
             }
         });
+    }
+
+
+    @Override
+    public void onRefresh() {
+        viewModel.refresh( this);
+    }
+
+    public static void setMainConnection(Boolean connection) {
+        connectionListener.connection(connection);
+    }
+
+    @Override
+    public void connection(Boolean connection) {
+        viewModel.refresh( this);
+        if (connection) snackbar = Snackbar.make(activityMainBinding.swipeRefreshLayout, getString(R.string.employees_empty), Snackbar.LENGTH_INDEFINITE);
+        else snackbar = Snackbar.make(activityMainBinding.swipeRefreshLayout, getString(R.string.employees_connection), Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("Ok", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        });
+        snackbar.show();
+    }
+
+    @Override
+    public void preExecute() {
+        activityMainBinding.swipeRefreshLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void postExecute(Boolean result) {
+        activityMainBinding.swipeRefreshLayout.setRefreshing(!result);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(mReceiver);
     }
 }

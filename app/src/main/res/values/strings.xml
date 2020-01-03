@@ -12,6 +12,10 @@
     <string name="email_invalid">Please add a valid email</string>
     <string name="password_empty">Password is empty!</string>
     <string name="password_invalid">Password must be at least 6 characters</string>
+    <string name="password_weak">Password is weak</string>
+
+    <string name="employees_empty">No employees available or detected</string>
+    <string name="employees_connection">Connect to internet to get employees</string>
 
     <string name="bonus">Bonus</string>
     <string name="holiday_bonus">Holiday Bonus</string>
@@ -38,5 +42,4 @@
     <string name="prompt_uprc">UPRC (Unique Population Registry Code)</string>
     <string name="prompt_ftr">FTR (Federal Taxpayer Register)</string>
     <string name="action_add_employee">Add employee</string>
-    <string name="password_weak">Password is weak</string>
 </resources>

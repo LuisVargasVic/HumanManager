@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.venkonenterprises.humanmanager.R;
-import com.venkonenterprises.humanmanager.domain.User;
+import com.venkonenterprises.humanmanager.domain.Employee;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,79 +22,16 @@ import java.util.Locale;
 public class BonusAdapter extends RecyclerView.Adapter<BonusAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<User> mUsers;
+    private List<Employee> mEmployees;
 
     BonusAdapter(Context context) {
         mContext = context;
-        mUsers = new ArrayList<>();
-        mUsers.add(
-                new User(
-                        "Luis",
-                        "Vargas",
-                        "+52 1122334455",
-                        "",
-                        "",
-                        "",
-                        "01/01/2019",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        714.29f
-                )
-        );
-        mUsers.add(
-                new User(
-                        "Eduardo",
-                        "Victoria",
-                        "+52 6677889900",
-                        "",
-                        "",
-                        "",
-                        "01/01/2015",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        714.29f
-                )
-        );
-        mUsers.add(
-                new User(
-                        "Alfonso",
-                        "Arreola",
-                        "+52 6677889900",
-                        "",
-                        "",
-                        "",
-                        "01/01/2014",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        714.29f
-                )
-        );
-        mUsers.add(
-                new User(
-                        "Rafael",
-                        "Novoa",
-                        "+52 6677889900",
-                        "",
-                        "",
-                        "",
-                        "07/01/2019",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        257.14f
-                )
-        );
+        mEmployees = new ArrayList<>();
+    }
+
+    void setEmployees(List<Employee> employees) {
+        mEmployees = employees;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -108,12 +45,12 @@ public class BonusAdapter extends RecyclerView.Adapter<BonusAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bind(mUsers.get(position));
+        holder.bind(mEmployees.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mUsers.size();
+        return mEmployees.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -143,15 +80,15 @@ public class BonusAdapter extends RecyclerView.Adapter<BonusAdapter.ViewHolder> 
             tvTotal = itemView.findViewById(R.id.tv_total);
         }
 
-        void bind(User user) {
-            tvName.setText(user.getName());
-            tvLastName.setText(user.getLastName());
-            tvDate.setText(user.getDate());
+        void bind(Employee employee) {
+            tvName.setText(employee.getName());
+            tvLastName.setText(employee.getLastName());
+            tvDate.setText(employee.getDate());
 
             SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
             Date date;
             try {
-                date = formatter.parse(user.getDate());
+                date = formatter.parse(employee.getDate());
                 Calendar calender = Calendar.getInstance();
                 calender.setTime(date);
 
@@ -163,7 +100,7 @@ public class BonusAdapter extends RecyclerView.Adapter<BonusAdapter.ViewHolder> 
                 double workedDays = (numOfDays - dayAt + 1);
                 double bonusDays = 14 / numOfDays * workedDays;
 
-                double bonus = user.getDailySalary() * bonusDays;
+                double bonus = employee.getDailySalary() * bonusDays;
 
                 tvBonus.setText(String.format("%,.2f", bonus));
 
@@ -201,8 +138,8 @@ public class BonusAdapter extends RecyclerView.Adapter<BonusAdapter.ViewHolder> 
 
                 }
 
-                double vacation = user.getDailySalary() * vacationDays;
-                double holidayVacation = user.getDailySalary() * vacationDays * 0.25;
+                double vacation = employee.getDailySalary() * vacationDays;
+                double holidayVacation = employee.getDailySalary() * vacationDays * 0.25;
 
                 tvVacation.setText(String.format("%,.2f", vacation));
                 tvHolidayBonus.setText(String.format("%,.2f", holidayVacation));

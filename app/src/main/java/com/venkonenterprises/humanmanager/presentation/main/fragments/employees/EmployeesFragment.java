@@ -1,4 +1,4 @@
-package com.venkonenterprises.humanmanager.presentation.main.fragments.bonus;
+package com.venkonenterprises.humanmanager.presentation.main.fragments.employees;
 
 
 import android.os.Bundle;
@@ -21,23 +21,20 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BonusFragment extends Fragment {
+public class EmployeesFragment extends Fragment {
 
-
-
-
-    public BonusFragment() {
+    public EmployeesFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_bonus, container, false);
 
-        final BonusAdapter adapter = new BonusAdapter(getContext());
+        View view = inflater.inflate(R.layout.fragment_employees, container, false);
 
-        RecyclerView recyclerView = view.findViewById(R.id.rv_bonus);
+        final EmployeesAdapter adapter = new EmployeesAdapter(getContext());
+
+        final RecyclerView recyclerView = view.findViewById(R.id.rv_users);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
