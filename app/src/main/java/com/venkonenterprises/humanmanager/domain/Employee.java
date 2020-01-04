@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class Employee implements Serializable {
 
+    private final String uid;
     private final String name;
     private final String lastName;
     private final String cellphone;
@@ -18,7 +19,8 @@ public class Employee implements Serializable {
     private final String ftr;
     private final Float dailySalary;
 
-    public Employee(String name, String lastName, String cellphone, String address, String referenceName, String referenceCellphone, String date, String country, String folio, String nss, String uprc, String ftr, Float dailySalary) {
+    public Employee(String uid, String name, String lastName, String cellphone, String address, String referenceName, String referenceCellphone, String date, String country, String folio, String ssn, String uprc, String ftr, Float dailySalary) {
+        this.uid = uid;
         this.name = name;
         this.lastName = lastName;
         this.cellphone = cellphone;
@@ -28,10 +30,14 @@ public class Employee implements Serializable {
         this.date = date;
         this.country = country;
         this.folio = folio;
-        this.ssn = nss;
+        this.ssn = ssn;
         this.uprc = uprc;
         this.ftr = ftr;
         this.dailySalary = dailySalary;
+    }
+
+    public String getUid() {
+        return uid;
     }
 
     public String getName() {
@@ -85,4 +91,5 @@ public class Employee implements Serializable {
     public Float getDailySalary() {
         return dailySalary;
     }
+
 }

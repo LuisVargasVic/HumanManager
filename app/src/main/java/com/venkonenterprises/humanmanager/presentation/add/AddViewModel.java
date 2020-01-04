@@ -18,8 +18,16 @@ public class AddViewModel extends AndroidViewModel {
         repository = new EmployeesRepository();
     }
 
-    void addEmployees(Employee employee, RemoteListener remoteListener) {
+    void addEmployee(Employee employee, RemoteListener remoteListener) {
         repository.addEmployee(employee, remoteListener);
+    }
+
+    void updateEmployee(Employee employee, RemoteListener remoteListener) {
+        repository.updateEmployee(employee, remoteListener);
+    }
+
+    void deleteEmployee(String employeeUid, RemoteListener remoteListener) {
+        repository.deleteEmployee(employeeUid, remoteListener);
     }
 
 }

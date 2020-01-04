@@ -1,6 +1,7 @@
 package com.venkonenterprises.humanmanager.presentation.main.fragments.employees;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,14 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.venkonenterprises.humanmanager.R;
 import com.venkonenterprises.humanmanager.domain.Employee;
+import com.venkonenterprises.humanmanager.presentation.add.AddActivity;
 import com.venkonenterprises.humanmanager.presentation.main.MainActivity;
 
 import java.util.List;
 
+import static com.venkonenterprises.humanmanager.presentation.add.AddActivity.EMPLOYEE_KEY;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EmployeesFragment extends Fragment {
+public class EmployeesFragment extends Fragment implements EmployeesAdapter.OnClickListener {
 
     public EmployeesFragment() {
         // Required empty public constructor
@@ -32,7 +36,7 @@ public class EmployeesFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_employees, container, false);
 
-        final EmployeesAdapter adapter = new EmployeesAdapter(getContext());
+        final EmployeesAdapter adapter = new EmployeesAdapter(getContext(), this);
 
         final RecyclerView recyclerView = view.findViewById(R.id.rv_users);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -54,4 +58,10 @@ public class EmployeesFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onItemClicked(Employee employee) {
+        Intent intent = new Intent(getContext(), AddActivity.class);
+        intent.putExtra(EMPLOYEE_KEY, employee);
+        startActivity(intent);
+    }
 }

@@ -24,11 +24,33 @@ public class AddActivity extends BaseActivity implements RemoteListener {
     private ActivityAddBinding activityAddBinding;
     private AddViewModel viewModel;
     private AlertDialog progressDialog;
+    public static final String EMPLOYEE_KEY = "employee";
+    private Employee mEmployee;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityAddBinding = DataBindingUtil.setContentView(this, R.layout.activity_add);
+
+        if (getIntent().hasExtra(EMPLOYEE_KEY)) {
+            mEmployee = (Employee) getIntent().getSerializableExtra(EMPLOYEE_KEY);
+            activityAddBinding.toolbar.setTitle(R.string.action_update_employee);
+            Objects.requireNonNull(activityAddBinding.nameLayout.getEditText()).setText(mEmployee.getName());
+            Objects.requireNonNull(activityAddBinding.lastNameLayout.getEditText()).setText(mEmployee.getLastName());
+            Objects.requireNonNull(activityAddBinding.cellphoneLayout.getEditText()).setText(mEmployee.getCellphone());
+            Objects.requireNonNull(activityAddBinding.addressLayout.getEditText()).setText(mEmployee.getAddress());
+            Objects.requireNonNull(activityAddBinding.salaryLayout.getEditText()).setText(String.valueOf(mEmployee.getDailySalary()));
+            Objects.requireNonNull(activityAddBinding.referenceNameLayout.getEditText()).setText(mEmployee.getReferenceName());
+            Objects.requireNonNull(activityAddBinding.referenceCellphoneLayout.getEditText()).setText(mEmployee.getReferenceCellphone());
+            Objects.requireNonNull(activityAddBinding.dateLayout.getEditText()).setText(mEmployee.getDate());
+            Objects.requireNonNull(activityAddBinding.countryLayout.getEditText()).setText(mEmployee.getCountry());
+            Objects.requireNonNull(activityAddBinding.folioLayout.getEditText()).setText(mEmployee.getFolio());
+            Objects.requireNonNull(activityAddBinding.ssnLayout.getEditText()).setText(mEmployee.getSsn());
+            Objects.requireNonNull(activityAddBinding.uprcLayout.getEditText()).setText(mEmployee.getUprc());
+            Objects.requireNonNull(activityAddBinding.ftrLayout.getEditText()).setText(mEmployee.getFtr());
+            activityAddBinding.addEmployee.setText(R.string.action_update_employee);
+            activityAddBinding.deleteEmployee.setVisibility(View.VISIBLE);
+        }
 
         viewModel = ViewModelProviders.of(this).get(AddViewModel.class);
         final Activity activity = this;
@@ -120,10 +142,25 @@ public class AddActivity extends BaseActivity implements RemoteListener {
                     activityAddBinding.ftrLayout.setError(getString(R.string.ftr_required));
                 } else {
                     remoteListener.preExecute();
-                    viewModel.addEmployees(
-                            new Employee(name, lastName, cellphone, address, referenceName, referenceCellphone, date, country, folio, ssn, uprc, ftr, validateSalary(dailySalary)),
-                            remoteListener);
+
+                    if (mEmployee != null) {
+                        viewModel.updateEmployee(
+                                new Employee(mEmployee.getUid(), name, lastName, cellphone, address, referenceName, referenceCellphone, date, country, folio, ssn, uprc, ftr, validateSalary(dailySalary)),
+                                remoteListener);
+                    } else {
+                        viewModel.addEmployee(
+                                new Employee("", name, lastName, cellphone, address, referenceName, referenceCellphone, date, country, folio, ssn, uprc, ftr, validateSalary(dailySalary)),
+                                remoteListener);
+                    }
                 }
+            }
+        });
+        activityAddBinding.deleteEmployee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.deleteEmployee(
+                        mEmployee.getUid(),
+                        remoteListener);
             }
         });
     }

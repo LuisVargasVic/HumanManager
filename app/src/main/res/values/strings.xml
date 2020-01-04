@@ -38,6 +38,8 @@
     <string name="prompt_uprc">UPRC (Unique Population Registry Code)</string>
     <string name="prompt_ftr">FTR (Federal Taxpayer Register)</string>
     <string name="action_add_employee">Add employee</string>
+    <string name="action_update_employee">Update employee</string>
+    <string name="action_delete_employee">Delete employee</string>
 
     <string name="name_required">Name is required</string>
     <string name="last_name_required">Last name is required</string>

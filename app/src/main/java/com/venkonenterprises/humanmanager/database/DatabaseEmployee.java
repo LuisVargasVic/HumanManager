@@ -42,7 +42,7 @@ public class DatabaseEmployee {
     }
 
     @NonNull
-    String getUid() {
+    public String getUid() {
         return uid;
     }
 

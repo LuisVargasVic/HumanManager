@@ -4,12 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.venkonenterprises.humanmanager.R;
+import com.venkonenterprises.humanmanager.databinding.ItemUserBinding;
 import com.venkonenterprises.humanmanager.domain.Employee;
 
 import java.util.ArrayList;
@@ -19,10 +20,16 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.View
 
     private final Context mContext;
     private List<Employee> mEmployees;
+    private OnClickListener mOnClickListener;
 
-    EmployeesAdapter(Context context) {
+    EmployeesAdapter(Context context, OnClickListener onClickListener) {
         mContext = context;
+        mOnClickListener = onClickListener;
         mEmployees = new ArrayList<>();
+    }
+
+    interface OnClickListener {
+        void onItemClicked(Employee employee);
     }
 
     void setEmployees(List<Employee> employees) {
@@ -35,8 +42,8 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.View
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         assert layoutInflater != null;
-        View view = layoutInflater.inflate(R.layout.item_user, parent, false);
-        return new ViewHolder(view);
+        ItemUserBinding itemUserBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_user, parent, false);
+        return new ViewHolder(itemUserBinding, mOnClickListener);
     }
 
     @Override
@@ -49,23 +56,29 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.View
         return mEmployees.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        final TextView tvName;
-        final TextView tvLastName;
-        final TextView tvCellphone;
+        ItemUserBinding mItemUserBinding;
+        OnClickListener mOnClickListener;
+        Employee mEmployee;
 
-        ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            tvName = itemView.findViewById(R.id.tv_name);
-            tvLastName = itemView.findViewById(R.id.tv_last_name);
-            tvCellphone = itemView.findViewById(R.id.tv_cellphone);
+        ViewHolder(@NonNull ItemUserBinding itemUserBinding, OnClickListener onClickListener) {
+            super(itemUserBinding.getRoot());
+            mOnClickListener = onClickListener;
+            mItemUserBinding = itemUserBinding;
         }
 
         void bind(Employee employee) {
-            tvName.setText(employee.getName());
-            tvLastName.setText(employee.getLastName());
-            tvCellphone.setText(employee.getCellphone());
+            mEmployee = employee;
+            mItemUserBinding.tvName.setText(employee.getName());
+            mItemUserBinding.tvLastName.setText(employee.getLastName());
+            mItemUserBinding.tvCellphone.setText(employee.getCellphone());
+            mItemUserBinding.background.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mOnClickListener.onItemClicked(mEmployee);
         }
     }
 }

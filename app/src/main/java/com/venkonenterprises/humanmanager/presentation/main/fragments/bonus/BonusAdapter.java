@@ -5,12 +5,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.venkonenterprises.humanmanager.R;
+import com.venkonenterprises.humanmanager.databinding.ItemBonusBinding;
 import com.venkonenterprises.humanmanager.domain.Employee;
 
 import java.text.SimpleDateFormat;
@@ -24,10 +25,16 @@ public class BonusAdapter extends RecyclerView.Adapter<BonusAdapter.ViewHolder> 
 
     private final Context mContext;
     private List<Employee> mEmployees;
+    private OnClickListener mOnClickListener;
 
-    BonusAdapter(Context context) {
+    BonusAdapter(Context context, OnClickListener onClickListener) {
         mContext = context;
+        mOnClickListener = onClickListener;
         mEmployees = new ArrayList<>();
+    }
+
+    interface OnClickListener {
+        void onItemClicked(Employee employee);
     }
 
     void setEmployees(List<Employee> employees) {
@@ -40,8 +47,8 @@ public class BonusAdapter extends RecyclerView.Adapter<BonusAdapter.ViewHolder> 
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         assert layoutInflater != null;
-        View view = layoutInflater.inflate(R.layout.item_bonus, parent, false);
-        return new ViewHolder(view, mContext);
+        ItemBonusBinding itemBonusBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_bonus, parent, false);
+        return new ViewHolder(itemBonusBinding, mContext, mOnClickListener);
     }
 
     @Override
@@ -54,39 +61,27 @@ public class BonusAdapter extends RecyclerView.Adapter<BonusAdapter.ViewHolder> 
         return mEmployees.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         final Context mContext;
-        final TextView tvName;
-        final TextView tvLastName;
-        final TextView tvDate;
-        final TextView tvWorkedDays;
-        final TextView tvWorkedYears;
-        final TextView tvBonus;
-        final TextView tvVacation;
-        final TextView tvHolidayBonus;
-        final TextView tvTotal;
+        private final ItemBonusBinding mItemBonusBinding;
+        private final OnClickListener mOnClickListener;
+        private Employee mEmployee;
 
-        ViewHolder(@NonNull View itemView, Context context) {
-            super(itemView);
+        ViewHolder(@NonNull ItemBonusBinding itemBonusBinding, Context context, OnClickListener onClickListener) {
+            super(itemBonusBinding.getRoot());
+            mItemBonusBinding = itemBonusBinding;
             mContext = context;
-            tvName = itemView.findViewById(R.id.tv_name);
-            tvLastName = itemView.findViewById(R.id.tv_last_name);
-            tvDate = itemView.findViewById(R.id.tv_date);
-            tvWorkedDays = itemView.findViewById(R.id.tv_worked_days);
-            tvWorkedYears = itemView.findViewById(R.id.tv_worked_years);
-            tvBonus = itemView.findViewById(R.id.tv_bonus);
-            tvVacation = itemView.findViewById(R.id.tv_vacation);
-            tvHolidayBonus = itemView.findViewById(R.id.tv_holiday_bonus);
-            tvTotal = itemView.findViewById(R.id.tv_total);
+            mOnClickListener = onClickListener;
         }
 
         @SuppressLint("DefaultLocale")
         void bind(Employee employee) {
-            tvName.setText(employee.getName());
-            tvLastName.setText(employee.getLastName());
-            tvDate.setText(employee.getDate());
-
+            mEmployee = employee;
+            mItemBonusBinding.tvName.setText(employee.getName());
+            mItemBonusBinding.tvLastName.setText(employee.getLastName());
+            mItemBonusBinding.tvDate.setText(employee.getDate());
+            mItemBonusBinding.background.setOnClickListener(this);
             SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
             Date date;
             try {
@@ -105,7 +100,7 @@ public class BonusAdapter extends RecyclerView.Adapter<BonusAdapter.ViewHolder> 
 
                 double bonus = employee.getDailySalary() * bonusDays;
 
-                tvBonus.setText(String.format("%,.2f", bonus));
+                mItemBonusBinding.tvBonus.setText(String.format("%,.2f", bonus));
 
                 // Holiday vacations and vacations
 
@@ -116,8 +111,8 @@ public class BonusAdapter extends RecyclerView.Adapter<BonusAdapter.ViewHolder> 
                 if (year < yearNow) {
                     vacationDays = 6;
                     int workedYears = yearNow - year;
-                    tvWorkedDays.setText(mContext.getString(R.string.time,  Double.valueOf(workedYears * numOfDays - dayAt + 1).intValue(), mContext.getString(R.string.days)));
-                    tvWorkedYears.setText(mContext.getString(R.string.time, workedYears, mContext.getString(R.string.years)));
+                    mItemBonusBinding.tvWorkedDays.setText(mContext.getString(R.string.time,  Double.valueOf(workedYears * numOfDays - dayAt + 1).intValue(), mContext.getString(R.string.days)));
+                    mItemBonusBinding.tvWorkedYears.setText(mContext.getString(R.string.time, workedYears, mContext.getString(R.string.years)));
 
                     if (workedYears < 5) {
                         vacationDays += workedYears * 2;
@@ -128,14 +123,14 @@ public class BonusAdapter extends RecyclerView.Adapter<BonusAdapter.ViewHolder> 
                 } else {
                     vacationDays = 6 / numOfDays * workedDays;
                     if (numOfDays == workedDays) {
-                        tvWorkedYears.setText(mContext.getString(R.string.one_year));
-                        tvWorkedDays.setText(mContext.getString(R.string.time, Double.valueOf(numOfDays).intValue(), mContext.getString(R.string.days)));
+                        mItemBonusBinding.tvWorkedYears.setText(mContext.getString(R.string.one_year));
+                        mItemBonusBinding.tvWorkedDays.setText(mContext.getString(R.string.time, Double.valueOf(numOfDays).intValue(), mContext.getString(R.string.days)));
                     } else {
-                        tvWorkedYears.setText(mContext.getString(R.string.less_year));
+                        mItemBonusBinding.tvWorkedYears.setText(mContext.getString(R.string.less_year));
                         if (numOfDays >= 1) {
-                            tvWorkedDays.setText(mContext.getString(R.string.time, Double.valueOf(workedDays).intValue(), mContext.getString(R.string.days)));
+                            mItemBonusBinding.tvWorkedDays.setText(mContext.getString(R.string.time, Double.valueOf(workedDays).intValue(), mContext.getString(R.string.days)));
                         } else {
-                            tvWorkedDays.setText(mContext.getString(R.string.day));
+                            mItemBonusBinding.tvWorkedDays.setText(mContext.getString(R.string.day));
                         }
                     }
 
@@ -144,16 +139,21 @@ public class BonusAdapter extends RecyclerView.Adapter<BonusAdapter.ViewHolder> 
                 double vacation = employee.getDailySalary() * vacationDays;
                 double holidayVacation = employee.getDailySalary() * vacationDays * 0.25;
 
-                tvVacation.setText(String.format("%,.2f", vacation));
-                tvHolidayBonus.setText(String.format("%,.2f", holidayVacation));
+                mItemBonusBinding.tvVacation.setText(String.format("%,.2f", vacation));
+                mItemBonusBinding.tvHolidayBonus.setText(String.format("%,.2f", holidayVacation));
                 double total = bonus + vacation + holidayVacation;
-                tvTotal.setText(String.format("%,.2f", total));
+                mItemBonusBinding.tvTotal.setText(String.format("%,.2f", total));
 
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
+        }
+
+        @Override
+        public void onClick(View v) {
+            mOnClickListener.onItemClicked(mEmployee);
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.venkonenterprises.humanmanager.remote.tasks;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -140,4 +142,46 @@ public class TaskEmployees {
                 });
     }
 
+    public void updateEmployee(Employee employee, final RemoteListener remoteListener) {
+        db.collection(USERS_KEY).document(userId).collection(EMPLOYEES_KEY).document(employee.getUid())
+                .update(NAME_KEY, employee.getName(),
+                        LAST_NAME_KEY, employee.getLastName(),
+                        CELLPHONE_KEY, employee.getCellphone(),
+                        ADDRESS_KEY, employee.getAddress(),
+                        REFERENCE_NAME_KEY, employee.getReferenceName(),
+                        REFERENCE_CELLPHONE_KEY, employee.getReferenceCellphone(),
+                        DATE_KEY, employee.getDate(),
+                        COUNTRY_KEY, employee.getCountry(),
+                        FOLIO_KEY, employee.getFolio(),
+                        SSN_KEY, employee.getSsn(),
+                        UPRC_KEY, employee.getUprc(),
+                        FTR_KEY, employee.getFtr(),
+                        DAILY_SALARY_KEY, employee.getDailySalary())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            remoteListener.postExecute(true);
+                        } else {
+                            remoteListener.postExecute(false);
+                        }
+                    }
+                });
+    }
+
+    public void deleteEmployee(String employeeUid, final RemoteListener remoteListener) {
+        Log.wtf("employeeUid", employeeUid);
+        db.collection(USERS_KEY).document(userId).collection(EMPLOYEES_KEY).document(employeeUid)
+                .delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            remoteListener.postExecute(true);
+                        } else {
+                            remoteListener.postExecute(false);
+                        }
+                    }
+                });
+    }
 }
