@@ -23,6 +23,7 @@ import com.venkonenterprises.humanmanager.presentation.login.SignInActivity;
 import com.venkonenterprises.humanmanager.remote.listeners.ConnectionListener;
 import com.venkonenterprises.humanmanager.remote.listeners.RemoteListener;
 import com.venkonenterprises.humanmanager.remote.receivers.MainReceiver;
+import com.venkonenterprises.humanmanager.utils.EmployeesService;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, RemoteListener, ConnectionListener {
 
@@ -112,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public void postExecute(Boolean result) {
         activityMainBinding.swipeRefreshLayout.setRefreshing(result);
+        EmployeesService.startActionUpdateWidgets(this);
     }
 
     @Override

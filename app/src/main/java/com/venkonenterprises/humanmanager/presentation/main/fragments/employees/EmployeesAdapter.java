@@ -10,7 +10,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.venkonenterprises.humanmanager.R;
-import com.venkonenterprises.humanmanager.databinding.ItemUserBinding;
+import com.venkonenterprises.humanmanager.databinding.ItemEmployeeBinding;
 import com.venkonenterprises.humanmanager.domain.Employee;
 
 import java.util.ArrayList;
@@ -42,8 +42,8 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.View
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         assert layoutInflater != null;
-        ItemUserBinding itemUserBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_user, parent, false);
-        return new ViewHolder(itemUserBinding, mOnClickListener);
+        ItemEmployeeBinding itemEmployeeBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_employee, parent, false);
+        return new ViewHolder(itemEmployeeBinding, mOnClickListener);
     }
 
     @Override
@@ -58,22 +58,22 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.View
 
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ItemUserBinding mItemUserBinding;
+        ItemEmployeeBinding mItemEmployeeBinding;
         OnClickListener mOnClickListener;
         Employee mEmployee;
 
-        ViewHolder(@NonNull ItemUserBinding itemUserBinding, OnClickListener onClickListener) {
-            super(itemUserBinding.getRoot());
+        ViewHolder(@NonNull ItemEmployeeBinding itemEmployeeBinding, OnClickListener onClickListener) {
+            super(itemEmployeeBinding.getRoot());
             mOnClickListener = onClickListener;
-            mItemUserBinding = itemUserBinding;
+            mItemEmployeeBinding = itemEmployeeBinding;
         }
 
         void bind(Employee employee) {
             mEmployee = employee;
-            mItemUserBinding.tvName.setText(employee.getName());
-            mItemUserBinding.tvLastName.setText(employee.getLastName());
-            mItemUserBinding.tvCellphone.setText(employee.getCellphone());
-            mItemUserBinding.background.setOnClickListener(this);
+            mItemEmployeeBinding.tvName.setText(employee.getName());
+            mItemEmployeeBinding.tvLastName.setText(employee.getLastName());
+            mItemEmployeeBinding.tvCellphone.setText(employee.getCellphone());
+            mItemEmployeeBinding.background.setOnClickListener(this);
         }
 
         @Override

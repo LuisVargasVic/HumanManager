@@ -57,5 +57,6 @@
     <string name="daily_salary_error">Please give a valid daily salary</string>
     <string name="ok">OK</string>
     <string name="sign_out">Sign out</string>
+    <string name="empty">No employees</string>
 
 </resources>
