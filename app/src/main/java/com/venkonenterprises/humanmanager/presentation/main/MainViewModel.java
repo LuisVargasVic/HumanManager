@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.venkonenterprises.humanmanager.data.EmployeesRepository;
+import com.venkonenterprises.humanmanager.data.SessionRepository;
 import com.venkonenterprises.humanmanager.database.EmployeesDatabase;
 import com.venkonenterprises.humanmanager.domain.Employee;
 import com.venkonenterprises.humanmanager.remote.listeners.RemoteListener;
@@ -18,12 +19,14 @@ public class MainViewModel extends AndroidViewModel {
 
     private static final String TAG = MainViewModel.class.getSimpleName();
     private final EmployeesRepository repository;
+    private final SessionRepository sessionRepository;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
         EmployeesDatabase database = EmployeesDatabase.getInstance(this.getApplication());
         Log.d(TAG, "Actively retrieving the employees from the DataBase");
         repository = new EmployeesRepository(database);
+        sessionRepository = new SessionRepository();
     }
 
     void refresh(RemoteListener remoteListener) {
@@ -34,4 +37,8 @@ public class MainViewModel extends AndroidViewModel {
         return repository.getEmployees();
     }
 
+    void signOut() {
+        repository.deleteAllEmployees();
+        sessionRepository.signOut();
+    }
 }

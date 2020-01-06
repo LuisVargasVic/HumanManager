@@ -9,12 +9,16 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class TaskSession {
 
-    private final OnCompleteListener<AuthResult> mOnCompleteListener;
+    private OnCompleteListener<AuthResult> mOnCompleteListener = null;
     private final FirebaseAuth mFirebaseAuth;
 
     public TaskSession(Context context, OnCompleteListener<AuthResult> onCompleteListener) {
         mOnCompleteListener = onCompleteListener;
         FirebaseApp.initializeApp(context);
+        mFirebaseAuth = FirebaseAuth.getInstance();
+    }
+
+    public TaskSession() {
         mFirebaseAuth = FirebaseAuth.getInstance();
     }
 
@@ -24,5 +28,9 @@ public class TaskSession {
 
     public void createUserWithEmailAndPassword(String email, String password) {
         mFirebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(mOnCompleteListener);
+    }
+
+    public void signOut() {
+        mFirebaseAuth.signOut();
     }
 }

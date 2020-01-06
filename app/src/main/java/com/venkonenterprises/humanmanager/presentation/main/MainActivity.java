@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -17,6 +19,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.venkonenterprises.humanmanager.R;
 import com.venkonenterprises.humanmanager.databinding.ActivityMainBinding;
 import com.venkonenterprises.humanmanager.presentation.add.AddActivity;
+import com.venkonenterprises.humanmanager.presentation.login.SignInActivity;
 import com.venkonenterprises.humanmanager.remote.listeners.ConnectionListener;
 import com.venkonenterprises.humanmanager.remote.listeners.RemoteListener;
 import com.venkonenterprises.humanmanager.remote.receivers.MainReceiver;
@@ -47,6 +50,18 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         activityMainBinding.swipeRefreshLayout.setOnRefreshListener(this);
         final Context context = this;
+        activityMainBinding.toolbar.inflateMenu(R.menu.menu_main);
+        activityMainBinding.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.menu_main_sign_out) {
+                    viewModel.signOut();
+                    navigateToLoginActivity();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         activityMainBinding.pager.setAdapter(new PagerAdapter(getSupportFragmentManager(), this));
         activityMainBinding.tabs.setupWithViewPager(activityMainBinding.pager);
@@ -60,6 +75,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         });
     }
 
+    private void navigateToLoginActivity() {
+        Intent intent = new Intent(this, SignInActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
     @Override
     public void onRefresh() {
@@ -91,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void postExecute(Boolean result) {
-        activityMainBinding.swipeRefreshLayout.setRefreshing(!result);
+        activityMainBinding.swipeRefreshLayout.setRefreshing(result);
     }
 
     @Override

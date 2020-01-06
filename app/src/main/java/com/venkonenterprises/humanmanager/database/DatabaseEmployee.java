@@ -9,7 +9,7 @@ public class DatabaseEmployee {
 
     @NonNull
     @PrimaryKey
-    private final String uid;
+    private final String id;
     private final String name;
     private final String lastName;
     private final String cellphone;
@@ -24,8 +24,8 @@ public class DatabaseEmployee {
     private final String ftr;
     private final Float dailySalary;
 
-    public DatabaseEmployee(@NonNull String uid, String name, String lastName, String cellphone, String address, String referenceName, String referenceCellphone, String date, String country, String folio, String ssn, String uprc, String ftr, Float dailySalary) {
-        this.uid = uid;
+    public DatabaseEmployee(@NonNull String id, String name, String lastName, String cellphone, String address, String referenceName, String referenceCellphone, String date, String country, String folio, String ssn, String uprc, String ftr, Float dailySalary) {
+        this.id = id;
         this.name = name;
         this.lastName = lastName;
         this.cellphone = cellphone;
@@ -42,8 +42,8 @@ public class DatabaseEmployee {
     }
 
     @NonNull
-    public String getUid() {
-        return uid;
+    public String getId() {
+        return id;
     }
 
     public String getName() {

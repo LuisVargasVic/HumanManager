@@ -56,5 +56,6 @@
     <string name="ftr_required">Federal Taxpayer Register is required</string>
     <string name="daily_salary_error">Please give a valid daily salary</string>
     <string name="ok">OK</string>
+    <string name="sign_out">Sign out</string>
 
 </resources>

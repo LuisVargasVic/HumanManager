@@ -19,7 +19,7 @@
         <activity android:name=".presentation.add.AddActivity" />
         <activity android:name=".presentation.main.MainActivity" />
         <activity
-            android:name=".presentation.login.LoginActivity"
+            android:name=".presentation.login.SignInActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

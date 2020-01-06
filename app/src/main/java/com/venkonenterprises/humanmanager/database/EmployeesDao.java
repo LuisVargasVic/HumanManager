@@ -20,4 +20,7 @@ public interface EmployeesDao {
 
     @Delete
     void deleteEmployee(DatabaseEmployee employee);
+
+    @Query("DELETE FROM DatabaseEmployee")
+    void deleteAllEmployees();
 }

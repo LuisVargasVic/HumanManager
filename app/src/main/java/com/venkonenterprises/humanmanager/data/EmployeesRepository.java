@@ -39,7 +39,7 @@ public class EmployeesRepository {
                         for (int i = 0; i < databaseEmployees.size(); i++) {
                             DatabaseEmployee databaseEmployee = databaseEmployees.get(i);
                             employees.add(new Employee(
-                                            databaseEmployee.getUid(),
+                                            databaseEmployee.getId(),
                                             databaseEmployee.getName(),
                                             databaseEmployee.getLastName(),
                                             databaseEmployee.getCellphone(),
@@ -72,5 +72,9 @@ public class EmployeesRepository {
 
     public void deleteEmployee(String employeeUid, RemoteListener remoteListener) {
         new TaskEmployees().deleteEmployee(employeeUid, remoteListener);
+    }
+
+    public void deleteAllEmployees() {
+        new TaskEmployees(mEmployeesDatabase).deleteAllEmployees();
     }
 }

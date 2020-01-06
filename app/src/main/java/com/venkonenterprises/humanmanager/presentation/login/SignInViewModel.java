@@ -10,11 +10,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.AuthResult;
 import com.venkonenterprises.humanmanager.data.SessionRepository;
 
-public class LoginViewModel extends AndroidViewModel {
+public class SignInViewModel extends AndroidViewModel {
 
     private final SessionRepository repository;
 
-    public LoginViewModel(@NonNull Application application) {
+    public SignInViewModel(@NonNull Application application) {
         super(application);
         repository = new SessionRepository();
     }

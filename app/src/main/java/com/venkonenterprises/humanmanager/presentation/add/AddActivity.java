@@ -104,7 +104,7 @@ public class AddActivity extends BaseActivity implements RemoteListener {
                 String dailySalary = Objects.requireNonNull(activityAddBinding.salaryLayout.getEditText()).getText().toString();
                 String referenceName = Objects.requireNonNull(activityAddBinding.referenceNameLayout.getEditText()).getText().toString();
                 String referenceCellphone = Objects.requireNonNull(activityAddBinding.referenceCellphoneLayout.getEditText()).getText().toString();
-                String date = activityAddBinding.dateLayout.getEditText().getText().toString();
+                String date = Objects.requireNonNull(activityAddBinding.dateLayout.getEditText()).getText().toString();
                 String country = Objects.requireNonNull(activityAddBinding.countryLayout.getEditText()).getText().toString();
                 String folio = Objects.requireNonNull(activityAddBinding.folioLayout.getEditText()).getText().toString();
                 String ssn = Objects.requireNonNull(activityAddBinding.ssnLayout.getEditText()).getText().toString();
@@ -145,7 +145,7 @@ public class AddActivity extends BaseActivity implements RemoteListener {
 
                     if (mEmployee != null) {
                         viewModel.updateEmployee(
-                                new Employee(mEmployee.getUid(), name, lastName, cellphone, address, referenceName, referenceCellphone, date, country, folio, ssn, uprc, ftr, validateSalary(dailySalary)),
+                                new Employee(mEmployee.getId(), name, lastName, cellphone, address, referenceName, referenceCellphone, date, country, folio, ssn, uprc, ftr, validateSalary(dailySalary)),
                                 remoteListener);
                     } else {
                         viewModel.addEmployee(
@@ -159,7 +159,7 @@ public class AddActivity extends BaseActivity implements RemoteListener {
             @Override
             public void onClick(View v) {
                 viewModel.deleteEmployee(
-                        mEmployee.getUid(),
+                        mEmployee.getId(),
                         remoteListener);
             }
         });

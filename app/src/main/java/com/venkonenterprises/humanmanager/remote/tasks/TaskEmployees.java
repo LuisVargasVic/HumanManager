@@ -1,7 +1,5 @@
 package com.venkonenterprises.humanmanager.remote.tasks;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -49,6 +47,10 @@ public class TaskEmployees {
 
     }
 
+    public TaskEmployees(EmployeesDatabase employeesDatabase) {
+        mEmployeesDatabase = employeesDatabase;
+    }
+
     public TaskEmployees(EmployeesDatabase employeesDatabase, RemoteListener remoteListener) {
         mEmployeesDatabase = employeesDatabase;
         mRemoteListener = remoteListener;
@@ -63,42 +65,22 @@ public class TaskEmployees {
                         if (e != null) return;
                         if (queryDocumentSnapshots != null) {
                             for (DocumentChange documentChange : queryDocumentSnapshots.getDocumentChanges()) {
-                                DatabaseEmployee databaseEmployee;
-                                if (documentChange.getType() != DocumentChange.Type.REMOVED) {
-                                    databaseEmployee = new DatabaseEmployee(
-                                            documentChange.getDocument().getId(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(NAME_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(LAST_NAME_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(CELLPHONE_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(ADDRESS_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(REFERENCE_NAME_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(REFERENCE_CELLPHONE_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(DATE_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(COUNTRY_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(FOLIO_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(SSN_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(UPRC_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(FTR_KEY)).toString(),
-                                            Float.valueOf(Objects.requireNonNull(documentChange.getDocument().get(DAILY_SALARY_KEY)).toString())
-                                    );
-                                } else {
-                                    databaseEmployee = new DatabaseEmployee(
-                                            documentChange.getDocument().getId(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(NAME_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(LAST_NAME_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(CELLPHONE_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(ADDRESS_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(REFERENCE_NAME_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(REFERENCE_CELLPHONE_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(DATE_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(COUNTRY_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(FOLIO_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(SSN_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(UPRC_KEY)).toString(),
-                                            Objects.requireNonNull(documentChange.getDocument().get(FTR_KEY)).toString(),
-                                            Float.valueOf(Objects.requireNonNull(documentChange.getDocument().get(DAILY_SALARY_KEY)).toString())
-                                    );
-                                }
+                                DatabaseEmployee databaseEmployee = new DatabaseEmployee(
+                                        documentChange.getDocument().getId(),
+                                        Objects.requireNonNull(documentChange.getDocument().get(NAME_KEY)).toString(),
+                                        Objects.requireNonNull(documentChange.getDocument().get(LAST_NAME_KEY)).toString(),
+                                        Objects.requireNonNull(documentChange.getDocument().get(CELLPHONE_KEY)).toString(),
+                                        Objects.requireNonNull(documentChange.getDocument().get(ADDRESS_KEY)).toString(),
+                                        Objects.requireNonNull(documentChange.getDocument().get(REFERENCE_NAME_KEY)).toString(),
+                                        Objects.requireNonNull(documentChange.getDocument().get(REFERENCE_CELLPHONE_KEY)).toString(),
+                                        Objects.requireNonNull(documentChange.getDocument().get(DATE_KEY)).toString(),
+                                        Objects.requireNonNull(documentChange.getDocument().get(COUNTRY_KEY)).toString(),
+                                        Objects.requireNonNull(documentChange.getDocument().get(FOLIO_KEY)).toString(),
+                                        Objects.requireNonNull(documentChange.getDocument().get(SSN_KEY)).toString(),
+                                        Objects.requireNonNull(documentChange.getDocument().get(UPRC_KEY)).toString(),
+                                        Objects.requireNonNull(documentChange.getDocument().get(FTR_KEY)).toString(),
+                                        Float.valueOf(Objects.requireNonNull(documentChange.getDocument().get(DAILY_SALARY_KEY)).toString())
+                                );
                                 databaseEmployees.put(databaseEmployee, documentChange.getType());
                             }
                             Iterator<HashMap.Entry<DatabaseEmployee, DocumentChange.Type>> itr = databaseEmployees.entrySet().iterator();
@@ -143,7 +125,7 @@ public class TaskEmployees {
     }
 
     public void updateEmployee(Employee employee, final RemoteListener remoteListener) {
-        db.collection(USERS_KEY).document(userId).collection(EMPLOYEES_KEY).document(employee.getUid())
+        db.collection(USERS_KEY).document(userId).collection(EMPLOYEES_KEY).document(employee.getId())
                 .update(NAME_KEY, employee.getName(),
                         LAST_NAME_KEY, employee.getLastName(),
                         CELLPHONE_KEY, employee.getCellphone(),
@@ -170,7 +152,6 @@ public class TaskEmployees {
     }
 
     public void deleteEmployee(String employeeUid, final RemoteListener remoteListener) {
-        Log.wtf("employeeUid", employeeUid);
         db.collection(USERS_KEY).document(userId).collection(EMPLOYEES_KEY).document(employeeUid)
                 .delete()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -183,5 +164,9 @@ public class TaskEmployees {
                         }
                     }
                 });
+    }
+
+    public void deleteAllEmployees() {
+        new TaskUpdateDatabase(mEmployeesDatabase).execute();
     }
 }

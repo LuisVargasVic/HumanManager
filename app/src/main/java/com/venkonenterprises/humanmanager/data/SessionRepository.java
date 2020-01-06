@@ -16,4 +16,7 @@ public class SessionRepository {
         new TaskSession(context, onCompleteListener).createUserWithEmailAndPassword(email, password);
     }
 
+    public void signOut() {
+        new TaskSession().signOut();
+    }
 }

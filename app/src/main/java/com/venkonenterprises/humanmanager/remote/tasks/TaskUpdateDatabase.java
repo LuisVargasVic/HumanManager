@@ -9,13 +9,13 @@ import com.venkonenterprises.humanmanager.remote.listeners.RemoteListener;
 
 class TaskUpdateDatabase extends AsyncTask<Void, Void, Boolean> {
 
-    private final EmployeesDatabase mEmployeesDatabase;
-    private final RemoteListener mRemoteListener;
-    private final DatabaseEmployee mEmployee;
-    private final DocumentChange.Type mType;
-    private final boolean mLast;
+    private EmployeesDatabase mEmployeesDatabase;
+    private RemoteListener mRemoteListener = null;
+    private DatabaseEmployee mEmployee = null;
+    private DocumentChange.Type mType = null;
+    private boolean mLast = false;
 
-    TaskUpdateDatabase(EmployeesDatabase employeesDatabase, RemoteListener remoteListener, DatabaseEmployee employee, DocumentChange.Type type, boolean last) {
+    TaskUpdateDatabase(EmployeesDatabase employeesDatabase, RemoteListener remoteListener, DatabaseEmployee employee, DocumentChange.Type type, Boolean last) {
         mEmployeesDatabase = employeesDatabase;
         mRemoteListener = remoteListener;
         mEmployee = employee;
@@ -23,24 +23,30 @@ class TaskUpdateDatabase extends AsyncTask<Void, Void, Boolean> {
         mLast = last;
     }
 
+    TaskUpdateDatabase(EmployeesDatabase employeesDatabase) {
+        mEmployeesDatabase = employeesDatabase;
+    }
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        mRemoteListener.preExecute();
+        if (mRemoteListener != null) mRemoteListener.preExecute();
     }
 
     @Override
     public Boolean doInBackground(Void... voids) {
-        if (!mType.equals(DocumentChange.Type.REMOVED)) mEmployeesDatabase.employeesDao().insertEmployee(mEmployee);
-        else mEmployeesDatabase.employeesDao().deleteEmployee(mEmployee);
-
-        return mLast;
+        if (mEmployee != null) {
+            if (mType.equals(DocumentChange.Type.REMOVED)) mEmployeesDatabase.employeesDao().deleteEmployee(mEmployee);
+            else mEmployeesDatabase.employeesDao().insertEmployee(mEmployee);
+            return mLast;
+        } else {
+            mEmployeesDatabase.employeesDao().deleteAllEmployees();
+            return false;
+        }
     }
 
     @Override
     protected void onPostExecute(Boolean result) {
-        if (result) {
-            mRemoteListener.postExecute(true);
-        }
+        if (mRemoteListener != null) mRemoteListener.postExecute(result);
     }
 }
