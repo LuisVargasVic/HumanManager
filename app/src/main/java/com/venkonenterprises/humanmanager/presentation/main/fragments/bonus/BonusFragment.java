@@ -33,11 +33,12 @@ public class BonusFragment extends Fragment implements BonusAdapter.OnClickListe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_bonus, container, false);
 
         final BonusAdapter adapter = new BonusAdapter(getContext(), this);
 
-        RecyclerView recyclerView = view.findViewById(R.id.rv_bonus);
+        final RecyclerView recyclerView = view.findViewById(R.id.rv_bonus);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);

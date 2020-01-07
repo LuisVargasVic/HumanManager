@@ -45,8 +45,7 @@ public class BonusAdapter extends RecyclerView.Adapter<BonusAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        assert layoutInflater != null;
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         ItemBonusBinding itemBonusBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_bonus, parent, false);
         return new ViewHolder(itemBonusBinding, mContext, mOnClickListener);
     }

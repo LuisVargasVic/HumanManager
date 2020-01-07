@@ -40,8 +40,7 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        assert layoutInflater != null;
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         ItemEmployeeBinding itemEmployeeBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_employee, parent, false);
         return new ViewHolder(itemEmployeeBinding, mOnClickListener);
     }
