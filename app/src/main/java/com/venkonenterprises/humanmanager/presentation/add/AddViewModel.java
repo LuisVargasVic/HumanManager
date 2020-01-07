@@ -5,9 +5,10 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.venkonenterprises.humanmanager.data.EmployeesRepository;
 import com.venkonenterprises.humanmanager.domain.Employee;
-import com.venkonenterprises.humanmanager.remote.listeners.RemoteListener;
 
 public class AddViewModel extends AndroidViewModel {
 
@@ -18,16 +19,16 @@ public class AddViewModel extends AndroidViewModel {
         repository = new EmployeesRepository();
     }
 
-    void addEmployee(Employee employee, RemoteListener remoteListener) {
-        repository.addEmployee(employee, remoteListener);
+    void addEmployee(Employee employee, OnCompleteListener<DocumentReference> documentReferenceOnCompleteListener) {
+        repository.addEmployee(employee, documentReferenceOnCompleteListener);
     }
 
-    void updateEmployee(Employee employee, RemoteListener remoteListener) {
-        repository.updateEmployee(employee, remoteListener);
+    void updateEmployee(Employee employee, OnCompleteListener<Void> voidOnCompleteListener) {
+        repository.updateEmployee(employee, voidOnCompleteListener);
     }
 
-    void deleteEmployee(String employeeUid, RemoteListener remoteListener) {
-        repository.deleteEmployee(employeeUid, remoteListener);
+    void deleteEmployee(String employeeUid, OnCompleteListener<Void> voidOnCompleteListener) {
+        repository.deleteEmployee(employeeUid, voidOnCompleteListener);
     }
 
 }

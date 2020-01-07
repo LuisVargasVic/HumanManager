@@ -1,7 +1,9 @@
 package com.venkonenterprises.humanmanager.presentation;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,10 +25,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         return alertDialog;
     }
 
-    protected AlertDialog setUpProgressDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialog);
-        builder.setCancelable(false);
-        builder.setView(R.layout.progress_layout);
-        return builder.create();
+    protected static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (inputMethodManager != null && activity.getCurrentFocus() != null) {
+            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        }
     }
+
 }

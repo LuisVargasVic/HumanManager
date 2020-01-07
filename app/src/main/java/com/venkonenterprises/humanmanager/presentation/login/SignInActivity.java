@@ -1,5 +1,6 @@
 package com.venkonenterprises.humanmanager.presentation.login;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -7,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -30,25 +30,25 @@ public class SignInActivity extends BaseActivity implements OnCompleteListener<A
     private static final String TAG = SignInActivity.class.getSimpleName();
     private SignInViewModel viewModel;
     private ActivitySignInBinding activitySignInBinding;
-    private AlertDialog progressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activitySignInBinding = DataBindingUtil.setContentView(this, R.layout.activity_sign_in);
-        progressDialog = setUpProgressDialog();
         viewModel = ViewModelProviders.of(this).get(SignInViewModel.class);
 
         FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
         if (mFirebaseAuth.getCurrentUser() != null) {
             navigateToMainActivity();
         }
+        final Activity activity = this;
 
         activitySignInBinding.signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                progressDialog.show();
+                hideSoftKeyboard(activity);
+                activitySignInBinding.signIn.setEnabled(false);
                 activitySignInBinding.usernameLayout.setError(null);
                 activitySignInBinding.passwordLayout.setError(null);
 
@@ -56,6 +56,7 @@ public class SignInActivity extends BaseActivity implements OnCompleteListener<A
 
                 if (TextUtils.isEmpty(username)) {
                     activitySignInBinding.usernameLayout.setError(getString(R.string.email_empty));
+                    activitySignInBinding.signIn.setEnabled(true);
                     return;
                 }
 
@@ -63,6 +64,7 @@ public class SignInActivity extends BaseActivity implements OnCompleteListener<A
 
                 if (!Pattern.matches(regex, username)) {
                     activitySignInBinding.usernameLayout.setError(getString(R.string.email_invalid));
+                    activitySignInBinding.signIn.setEnabled(true);
                     return;
                 }
 
@@ -70,14 +72,17 @@ public class SignInActivity extends BaseActivity implements OnCompleteListener<A
 
                 if (TextUtils.isEmpty(password)) {
                     activitySignInBinding.passwordLayout.setError(getString(R.string.password_empty));
+                    activitySignInBinding.signIn.setEnabled(true);
                     return;
                 }
 
                 if (password.length() < 6) {
                     activitySignInBinding.passwordLayout.setError(getString(R.string.password_invalid));
+                    activitySignInBinding.signIn.setEnabled(true);
                     return;
                 }
 
+                activitySignInBinding.loading.setVisibility(View.VISIBLE);
                 viewModel.createUserWithEmailAndPassword(SignInActivity.this, SignInActivity.this, username, password);
             }
         });
@@ -92,19 +97,23 @@ public class SignInActivity extends BaseActivity implements OnCompleteListener<A
             catch (FirebaseAuthWeakPasswordException weakPassword) {
                 Log.d(TAG, "onComplete: " + weakPassword.getMessage());
                 activitySignInBinding.passwordLayout.setError(weakPassword.getReason());
-                progressDialog.hide();
+                activitySignInBinding.loading.setVisibility(View.GONE);
+                activitySignInBinding.signIn.setEnabled(true);
             }
             catch (FirebaseAuthUserCollisionException existEmail) {
                 String username = Objects.requireNonNull(activitySignInBinding.usernameLayout.getEditText()).getText().toString().trim();
                 String password = Objects.requireNonNull(activitySignInBinding.passwordLayout.getEditText()).getText().toString().trim();
+                activitySignInBinding.loading.setVisibility(View.VISIBLE);
                 viewModel.signInWithEmailAndPassword(this,this, username, password);
             }
             catch (Exception e) {
-                progressDialog.hide();
+                activitySignInBinding.loading.setVisibility(View.GONE);
+                activitySignInBinding.signIn.setEnabled(true);
                 simpleAlertDialog(e.getMessage()).show();
             }
         } else {
-            progressDialog.dismiss();
+            activitySignInBinding.loading.setVisibility(View.GONE);
+            activitySignInBinding.signIn.setEnabled(true);
             navigateToMainActivity();
         }
     }

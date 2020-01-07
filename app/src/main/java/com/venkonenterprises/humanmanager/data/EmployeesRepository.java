@@ -4,6 +4,8 @@ import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.venkonenterprises.humanmanager.database.DatabaseEmployee;
 import com.venkonenterprises.humanmanager.database.EmployeesDatabase;
 import com.venkonenterprises.humanmanager.domain.Employee;
@@ -62,16 +64,16 @@ public class EmployeesRepository {
                 });
     }
 
-    public void addEmployee(Employee employee, RemoteListener remoteListener) {
-        new TaskEmployees().addEmployee(employee, remoteListener);
+    public void addEmployee(Employee employee, OnCompleteListener<DocumentReference> documentReferenceOnCompleteListener) {
+        new TaskEmployees().addEmployee(employee, documentReferenceOnCompleteListener);
     }
 
-    public void updateEmployee(Employee employee, RemoteListener remoteListener) {
-        new TaskEmployees().updateEmployee(employee, remoteListener);
+    public void updateEmployee(Employee employee, OnCompleteListener<Void> voidOnCompleteListener) {
+        new TaskEmployees().updateEmployee(employee, voidOnCompleteListener);
     }
 
-    public void deleteEmployee(String employeeUid, RemoteListener remoteListener) {
-        new TaskEmployees().deleteEmployee(employeeUid, remoteListener);
+    public void deleteEmployee(String employeeUid, OnCompleteListener<Void> voidOnCompleteListener) {
+        new TaskEmployees().deleteEmployee(employeeUid, voidOnCompleteListener);
     }
 
     public void deleteAllEmployees() {

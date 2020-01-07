@@ -1,10 +1,8 @@
 package com.venkonenterprises.humanmanager.remote.tasks;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -94,7 +92,7 @@ public class TaskEmployees {
                 });
     }
 
-    public void addEmployee(Employee employeeObject, final RemoteListener remoteListener) {
+    public void addEmployee(Employee employeeObject, OnCompleteListener<DocumentReference> documentReferenceOnCompleteListener) {
         HashMap<String, Object> employee = new HashMap<>();
         employee.put(NAME_KEY, employeeObject.getName());
         employee.put(LAST_NAME_KEY, employeeObject.getLastName());
@@ -112,19 +110,10 @@ public class TaskEmployees {
 
         db.collection(USERS_KEY).document(userId).collection(EMPLOYEES_KEY)
                 .add(employee)
-                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentReference> task) {
-                        if (task.isSuccessful()) {
-                            remoteListener.postExecute(true);
-                        } else {
-                            remoteListener.postExecute(false);
-                        }
-                    }
-                });
+                .addOnCompleteListener(documentReferenceOnCompleteListener);
     }
 
-    public void updateEmployee(Employee employee, final RemoteListener remoteListener) {
+    public void updateEmployee(Employee employee, OnCompleteListener<Void> voidOnCompleteListener) {
         db.collection(USERS_KEY).document(userId).collection(EMPLOYEES_KEY).document(employee.getId())
                 .update(NAME_KEY, employee.getName(),
                         LAST_NAME_KEY, employee.getLastName(),
@@ -139,31 +128,13 @@ public class TaskEmployees {
                         UPRC_KEY, employee.getUprc(),
                         FTR_KEY, employee.getFtr(),
                         DAILY_SALARY_KEY, employee.getDailySalary())
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            remoteListener.postExecute(true);
-                        } else {
-                            remoteListener.postExecute(false);
-                        }
-                    }
-                });
+                .addOnCompleteListener(voidOnCompleteListener);
     }
 
-    public void deleteEmployee(String employeeUid, final RemoteListener remoteListener) {
+    public void deleteEmployee(String employeeUid, OnCompleteListener<Void> voidOnCompleteListener) {
         db.collection(USERS_KEY).document(userId).collection(EMPLOYEES_KEY).document(employeeUid)
                 .delete()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            remoteListener.postExecute(true);
-                        } else {
-                            remoteListener.postExecute(false);
-                        }
-                    }
-                });
+                .addOnCompleteListener(voidOnCompleteListener);
     }
 
     public void deleteAllEmployees() {

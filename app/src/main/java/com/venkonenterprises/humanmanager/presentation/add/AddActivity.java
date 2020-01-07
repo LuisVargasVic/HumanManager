@@ -4,26 +4,26 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
-import androidx.appcompat.app.AlertDialog;
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.venkonenterprises.humanmanager.R;
 import com.venkonenterprises.humanmanager.databinding.ActivityAddBinding;
 import com.venkonenterprises.humanmanager.domain.Employee;
 import com.venkonenterprises.humanmanager.presentation.BaseActivity;
-import com.venkonenterprises.humanmanager.remote.listeners.RemoteListener;
 import com.venkonenterprises.humanmanager.utils.DatePickerFragment;
 
 import java.util.Objects;
 
-public class AddActivity extends BaseActivity implements RemoteListener {
+public class AddActivity extends BaseActivity {
 
     private ActivityAddBinding activityAddBinding;
     private AddViewModel viewModel;
-    private AlertDialog progressDialog;
     public static final String EMPLOYEE_KEY = "employee";
     private Employee mEmployee;
 
@@ -76,13 +76,12 @@ public class AddActivity extends BaseActivity implements RemoteListener {
             }
         });
 
-        final RemoteListener remoteListener = this;
-        progressDialog = setUpProgressDialog();
-
         activityAddBinding.addEmployee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                hideSoftKeyboard(activity);
+                activityAddBinding.addEmployee.setEnabled(false);
                 activityAddBinding.nameLayout.setError(null);
                 activityAddBinding.lastNameLayout.setError(null);
                 activityAddBinding.cellphoneLayout.setError(null);
@@ -114,53 +113,113 @@ public class AddActivity extends BaseActivity implements RemoteListener {
 
                 if (TextUtils.isEmpty(name)) {
                     activityAddBinding.nameLayout.setError(getString(R.string.name_required));
-                } else if (TextUtils.isEmpty(lastName)) {
+                    activityAddBinding.addEmployee.setEnabled(true);
+                    return;
+                }
+                if (TextUtils.isEmpty(lastName)) {
                     activityAddBinding.lastNameLayout.setError(getString(R.string.last_name_required));
-                } else if (TextUtils.isEmpty(cellphone)) {
+                    activityAddBinding.addEmployee.setEnabled(true);
+                    return;
+                }
+                if (TextUtils.isEmpty(cellphone)) {
                     activityAddBinding.cellphoneLayout.setError(getString(R.string.cellphone_required));
-                } else if (TextUtils.isEmpty(address)) {
+                    activityAddBinding.addEmployee.setEnabled(true);
+                }
+                if (TextUtils.isEmpty(address)) {
                     activityAddBinding.addressLayout.setError(getString(R.string.address_required));
-                } else if (TextUtils.isEmpty(dailySalary)) {
+                    activityAddBinding.addEmployee.setEnabled(true);
+                    return;
+                }
+                if (TextUtils.isEmpty(dailySalary)) {
                     activityAddBinding.salaryLayout.setError(getString(R.string.daily_salary_required));
-                } else if (validateSalary(dailySalary) == null) {
+                    activityAddBinding.addEmployee.setEnabled(true);
+                    return;
+                }
+                if (validateSalary(dailySalary) == null) {
                     activityAddBinding.salaryLayout.setError(getString(R.string.daily_salary_error));
-                } else if (TextUtils.isEmpty(referenceName)) {
+                    activityAddBinding.addEmployee.setEnabled(true);
+                    return;
+                }
+                if (TextUtils.isEmpty(referenceName)) {
                     activityAddBinding.referenceNameLayout.setError(getString(R.string.reference_name_required));
-                } else if (TextUtils.isEmpty(referenceCellphone)) {
+                    activityAddBinding.addEmployee.setEnabled(true);
+                    return;
+                }
+                if (TextUtils.isEmpty(referenceCellphone)) {
                     activityAddBinding.referenceCellphoneLayout.setError(getString(R.string.reference_cellphone_required));
-                } else if (TextUtils.isEmpty(date)) {
+                    activityAddBinding.addEmployee.setEnabled(true);
+                    return;
+                }
+                if (TextUtils.isEmpty(date)) {
                     activityAddBinding.dateLayout.setError(getString(R.string.date_required));
-                } else if (TextUtils.isEmpty(country)) {
+                    activityAddBinding.addEmployee.setEnabled(true);
+                    return;
+                }
+                if (TextUtils.isEmpty(country)) {
                     activityAddBinding.countryLayout.setError(getString(R.string.country_required));
-                } else if (TextUtils.isEmpty(folio)) {
+                    activityAddBinding.addEmployee.setEnabled(true);
+                    return;
+                }
+                if (TextUtils.isEmpty(folio)) {
                     activityAddBinding.folioLayout.setError(getString(R.string.folio_required));
-                } else if (TextUtils.isEmpty(ssn)) {
+                    activityAddBinding.addEmployee.setEnabled(true);
+                    return;
+                }
+                if (TextUtils.isEmpty(ssn)) {
                     activityAddBinding.ssnLayout.setError(getString(R.string.ssn_required));
-                } else if (TextUtils.isEmpty(uprc)) {
+                    activityAddBinding.addEmployee.setEnabled(true);
+                    return;
+                }
+                if (TextUtils.isEmpty(uprc)) {
                     activityAddBinding.uprcLayout.setError(getString(R.string.uprc_required));
-                } else if (TextUtils.isEmpty(ftr)) {
+                    activityAddBinding.addEmployee.setEnabled(true);
+                    return;
+                }
+                if (TextUtils.isEmpty(ftr)) {
                     activityAddBinding.ftrLayout.setError(getString(R.string.ftr_required));
-                } else {
-                    remoteListener.preExecute();
+                    activityAddBinding.addEmployee.setEnabled(true);
+                    return;
+                }
 
-                    if (mEmployee != null) {
-                        viewModel.updateEmployee(
-                                new Employee(mEmployee.getId(), name, lastName, cellphone, address, referenceName, referenceCellphone, date, country, folio, ssn, uprc, ftr, validateSalary(dailySalary)),
-                                remoteListener);
-                    } else {
-                        viewModel.addEmployee(
-                                new Employee("", name, lastName, cellphone, address, referenceName, referenceCellphone, date, country, folio, ssn, uprc, ftr, validateSalary(dailySalary)),
-                                remoteListener);
-                    }
+                onPreExecute();
+
+                if (mEmployee != null) {
+                    viewModel.updateEmployee(
+                            new Employee(mEmployee.getId(), name, lastName, cellphone, address, referenceName, referenceCellphone, date, country, folio, ssn, uprc, ftr, validateSalary(dailySalary)),
+                            new OnCompleteListenerGeneric<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    onPostExecute(task);
+
+                                }
+                            });
+                } else {
+                    viewModel.addEmployee(
+                            new Employee("", name, lastName, cellphone, address, referenceName, referenceCellphone, date, country, folio, ssn, uprc, ftr, validateSalary(dailySalary)),
+                            new OnCompleteListenerGeneric<DocumentReference>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                    onPostExecute(task);
+
+                                }
+                            });
                 }
             }
         });
         activityAddBinding.deleteEmployee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                onPreExecute();
+                hideSoftKeyboard(activity);
                 viewModel.deleteEmployee(
                         mEmployee.getId(),
-                        remoteListener);
+                        new OnCompleteListenerGeneric<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                onPostExecute(task);
+
+                            }
+                        });
             }
         });
     }
@@ -175,21 +234,28 @@ public class AddActivity extends BaseActivity implements RemoteListener {
         return floatDailySalary;
     }
 
-    private static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        if (inputMethodManager != null && activity.getCurrentFocus() != null) {
-            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+    public void onPreExecute() {
+        activityAddBinding.loading.setVisibility(View.VISIBLE);
+        activityAddBinding.addEmployee.setEnabled(false);
+        activityAddBinding.deleteEmployee.setEnabled(false);
+    }
+
+    public <T> void onPostExecute(Task<T> task) {
+        if (task.isSuccessful()) {
+            finish();
+        } else {
+            try {
+                throw Objects.requireNonNull(task.getException());
+            } catch (Exception e) {
+                simpleAlertDialog(e.getMessage()).show();
+            }
         }
+        activityAddBinding.loading.setVisibility(View.INVISIBLE);
+        activityAddBinding.addEmployee.setEnabled(true);
+        activityAddBinding.deleteEmployee.setEnabled(true);
     }
 
-    @Override
-    public void preExecute() {
-        progressDialog.show();
-    }
+    interface OnCompleteListenerGeneric<T> extends OnCompleteListener<T> {
 
-    @Override
-    public void postExecute(Boolean result) {
-        progressDialog.dismiss();
-        finish();
     }
 }
